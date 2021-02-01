@@ -313,12 +313,38 @@ var producGame = {
             console.log('记录失败')
         }
     },
+    queryIntegral: async (axios, options) => {
+        const useragent = buildUnicomUserAgent(options, 'p')
+        let params = {
+            'methodType': 'queryIntegral',
+            'taskCenterId': options.taskCenterId,
+            'videoIntegral': '0',
+            'isVideo': 'Y',
+            'clientVersion': '8.0100',
+            'deviceType': 'Android'
+        }
+        let { data, config } = await axios.request({
+            headers: {
+                "user-agent": useragent,
+                "referer": "https://img.client.10010.com",
+                "origin": "https://img.client.10010.com"
+            },
+            url: `https://m.client.10010.com/producGameTaskCenter`,
+            method: 'post',
+            data: transParams(params)
+        })
+        if (data.code === '0000') {
+            console.log('获取积分任务状态成功')
+        } else {
+            console.log('获取积分任务状态失败')
+        }
+    },
     getTaskList: async (axios, options) => {
         const useragent = buildUnicomUserAgent(options, 'p')
         let params = {
             'methodType': 'queryTaskCenter',
             'deviceType': 'Android',
-            'clientVersion': '8.0100',
+            'clientVersion': '8.0100'
         }
         let { data, config } = await axios.request({
             headers: {
@@ -361,6 +387,11 @@ var producGame = {
                     ...options,
                     jar,
                     game
+                })
+                await producGame.timeTaskQuery(axios, options)
+                await producGame.gameFlowGet(axios, {
+                    ...options,
+                    gameId: game.gameId
                 })
             })
         }
@@ -406,6 +437,11 @@ var producGame = {
                         gameCode: game.resource_id
                     }
                 })
+                await producGame.getTaskList(axios, options)
+                await producGame.gameIntegralGet(axios, {
+                    ...options,
+                    taskCenterId: game.id
+                })
             })
         }
 
@@ -416,7 +452,6 @@ var producGame = {
         games = cgames.filter(d => d.task === '5' && d.reachState === '1' && d.task_type === 'duration')
         console.log('剩余未领取game', games.length)
         for (let game of games) {
-            console.log(game.name)
             await new Promise((resolve, reject) => setTimeout(resolve, (Math.floor(Math.random() * 10) + 20) * 1000))
             await producGame.gameIntegralGet(axios, {
                 ...options,
@@ -520,10 +555,14 @@ var producGame = {
         }
     },
     gameBox: async (axios, options) => {
-        await producGame.gameIntegralGet(axios, {
-            ...options,
-            taskCenterId: 98
-        })
+        let { games: v_games } = await producGame.getTaskList(axios, options)
+        let box_task = v_games.find(d => d.id === '98' && d.reachState !== '2')
+        if (box_task) {
+            await producGame.gameIntegralGet(axios, {
+                ...options,
+                taskCenterId: box_task.id
+            })
+        }
     },
     watch3TimesVideoQuery: async (request, options) => {
         let params = {
@@ -575,25 +614,19 @@ var producGame = {
             console.log('领取视频任务奖励,剩余', n, '次')
             let { jar } = await producGame.watch3TimesVideoQuery(axios, options)
             let i = 1
-            do {
+            while (i <= n) {
                 await producGame.watch3TimesVideo(axios, {
                     ...options,
                     jar
                 })
+                await new Promise((resolve, reject) => setTimeout(resolve, (Math.floor(Math.random() * 5) + 2) * 200))
+                await producGame.getTaskList(axios, options)
+                await producGame.queryIntegral(axios, {
+                    ...options,
+                    taskCenterId: video_task.id
+                })
                 ++i
-            } while (i <= n)
-
-            await producGame.gameIntegralGet(axios, {
-                ...options,
-                taskCenterId: video_task.id
-            })
-        } else if (video_task.reachState === '1') {
-
-            await producGame.gameIntegralGet(axios, {
-                ...options,
-                taskCenterId: video_task.id
-            })
-
+            }
         }
 
         let { games } = await producGame.getTaskList(axios, options)
