@@ -1,6 +1,5 @@
 const useragent = require("./myPhone").useragent;
 let AES = require("./PAES");
-
 /**
  * @param {String} url request url absolute path
  */
@@ -163,6 +162,46 @@ let lookVideoDoubleResult = (title) => {
     }
   };
 };
+let lookVideoDouble = (params1, params2, title) => {
+  console.log(`😒 ${title}游玩开始翻倍`);
+  return async (axios, options) => {
+    params1["sign"] = AES.sign([
+      params1.arguments1,
+      params1.arguments2,
+      params1.arguments3,
+      params1.arguments4,
+    ]);
+    let { num, jar } = await require("../taskcallback").query(axios, {
+      ...options,
+      params: params1,
+    });
+
+    if (!num) {
+      console.log(`签到小游戏${title}: 今日已完成`);
+      return;
+    }
+
+    do {
+      console.log("🎞 看视频第", num, "次");
+      params2["sign"] = AES.sign([
+        params2.arguments1,
+        params2.arguments2,
+        params2.arguments3,
+        params2.arguments4,
+      ]);
+      await require("../taskcallback").doTask(axios, {
+        ...options,
+        params: params2,
+        jar,
+      });
+      if (num) {
+        console.log("等待15秒再继续");
+        // eslint-disable-next-line no-unused-vars
+        await new Promise((resolve, reject) => setTimeout(resolve, 15 * 1000));
+      }
+    } while (--num);
+  };
+};
 
 /**
  *
@@ -192,4 +231,5 @@ module.exports = {
   postFreeLogin,
   lookVideoDoubleResult,
   encodeParams,
+  lookVideoDouble,
 };
