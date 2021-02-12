@@ -160,7 +160,9 @@ let ingotsPage = {
           videoOrderNo: params["orderId"],
           sourceCode: "lt_ingots",
         };
-
+        console.log("等待35秒再继续");
+        // eslint-disable-next-line no-unused-vars
+        await new Promise((resolve, reject) => setTimeout(resolve, 35 * 1000));
         let timestamp = moment().format("YYYYMMDDHHmmss");
         result = await axios.request({
           headers: {
@@ -185,6 +187,9 @@ let ingotsPage = {
       } else {
         freeTimes--;
       }
+      console.log("等待35秒再继续");
+      // eslint-disable-next-line no-unused-vars
+      await new Promise((resolve, reject) => setTimeout(resolve, 35 * 1000));
       let score = encrypt(randomNumber(12, 17) * 10, "gb6YCccUvth75Tm2");
       let timestamp = moment().format("YYYYMMDDHHmmss");
       let result = await axios.request({
@@ -218,10 +223,10 @@ let ingotsPage = {
             console.log("尝试翻倍");
             console.log("😒 聚宝盆游玩翻倍 测试");
             await ingotsPage.postGameDouble(axios, options);
-            console.log("等待15秒再继续");
+            console.log("等待35秒再继续");
             // eslint-disable-next-line no-unused-vars
             await new Promise((resolve, reject) =>
-              setTimeout(resolve, 15 * 1000)
+              setTimeout(resolve, 35 * 1000)
             );
             let recordId = i["recordId"];
             let timestamp = moment().format("YYYYMMDDHHmmss");
@@ -240,6 +245,7 @@ let ingotsPage = {
                 phone: phone,
                 token: ecs_token,
                 recordId: recordId,
+                prizeNum: i["prizeNum"],
                 sourceCode: "lt_ingots",
               }),
             });
@@ -294,22 +300,16 @@ let ingotsPage = {
     {
       arguments1: "AC20200716103629",
       arguments2: "GGPD",
-      arguments3: "45d6dbc3ad144c938cfa6b8e81803b85",
+      arguments3: "56ff7ad4a6e84886b18ae8716dfd1d6d",
       arguments4: new Date().getTime(),
       arguments6: "517050707",
-      arguments7: "517050707",
-      arguments8: "123456",
-      arguments9: "4640b530b3f7481bb5821c6871854ce5",
       netWay: "Wifi",
-      remark1: "签到小游戏聚宝盆",
-      remark: "签到看视频翻倍得积分",
       version: `android@8.0102`,
-      codeId: 945689604,
     },
     {
       arguments1: "AC20200716103629", // acid
       arguments2: "GGPD", // yhChannel
-      arguments3: "45d6dbc3ad144c938cfa6b8e81803b85", // yhTaskId menuId
+      arguments3: "56ff7ad4a6e84886b18ae8716dfd1d6d", // yhTaskId menuId
       arguments4: new Date().getTime(), // time
       arguments6: "517050707",
       arguments7: "517050707",
