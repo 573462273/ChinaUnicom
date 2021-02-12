@@ -1,0 +1,40 @@
+# File: .github/workflows/repo-sync.yml
+name: sync-573462273-scripts
+on:
+  schedule:
+    - cron: '1 0,15/3 * * *'
+  workflow_dispatch:
+  watch:
+    types: started
+  push:
+    branches: [ main ]
+  repository_dispatch:
+    types: sync-DJ-clamp-scripts
+jobs:
+  repo-sync:
+    env:
+      PAT: ${{ secrets.PAT }} #此处PAT需要申请，教程详见：https://www.jianshu.com/p/bb82b3ad1d11      
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: sync DJ-clamp-scripts
+        uses: repo-sync/github-sync@v2
+        if: env.PAT
+        with:
+          source_repo: "https://github.com/DJ-clamp/BaseSation.git"
+          source_branch: "dev"
+          destination_branch: "dev"
+          github_token: ${{ secrets.PAT }}
+          
+      - name: Merge main from dev
+        uses: devmasx/merge-branch@v1.3.1
+        if: env.PAT
+        with:
+          type: now
+          from_branch: dev
+          target_branch: main
+          github_token: ${{ secrets.PAT }}
