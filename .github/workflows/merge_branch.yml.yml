@@ -7,7 +7,7 @@ on:
   watch:
     types: started
   push:
-    branches: [ main ]
+    branches: [ master ]
   repository_dispatch:
     types: sync-573462273-Unicom
 jobs:
@@ -27,6 +27,6 @@ jobs:
         with:
           source_repo: "https://github.com/573462273/Unicom.git"
           source_branch: "dev"
-          destination_branch: "main"
+          destination_branch: "master"
           github_token: ${{ secrets.PAT }}
           
