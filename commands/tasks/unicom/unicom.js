@@ -422,6 +422,18 @@ var start = async (params) => {
     },
     taskOption
   );
+  
+  //看书里面的5个视频
+//活动入口：主页-小说标签-任意一本小说内页章节中间
+  await scheduler.regTask(
+    "book5video",
+    async (request) => {
+      await require("./book5video.js").doTask(request, options);
+    },
+    taskOption
+  );
+
+  
 };
 module.exports = {
   start,
