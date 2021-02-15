@@ -174,7 +174,6 @@ let postFreeLoginGuessWithCallBack = (
       })
       .catch((err) => console.log(err));
     let result = res.data;
-    console.log(result);
     if (result.code !== 0) {
       throw new Error(result.message);
     }
