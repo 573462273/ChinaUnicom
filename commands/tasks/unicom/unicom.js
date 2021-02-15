@@ -12,6 +12,7 @@
  *  首页-小说-读满10章赢好礼
  *  首页-小说-阅读福利抽大奖
  *  首页-签到有礼-免费领-浏览领积分
+ *  首页-签到有礼-免费领-猜拳拿话费
  *  首页-签到有礼-免费拿-看视频夺宝
  *  首页-签到有礼-免费抽-抓OPPO手机
  *  首页-签到有礼-免费抽-拿666积分-豪礼大派送抽奖
@@ -419,6 +420,15 @@ var start = async (params) => {
     "dailyBaWangcard",
     async (request) => {
       await require("./dailyBaWangcard.js").doTask(request, options);
+    },
+    taskOption
+  );
+
+  // 首页-签到有礼-免费领-猜拳拿话费
+  await scheduler.regTask(
+    "dailyFingerqd",
+    async (request) => {
+      await require("./dailyFingerqd.js").doTask(request, options);
     },
     taskOption
   );
