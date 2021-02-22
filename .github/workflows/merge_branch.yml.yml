@@ -27,7 +27,7 @@ jobs:
         with:
           source_repo: "https://github.com/DJ-clamp/BaseSation.git"
           source_branch: "azmodan"
-          destination_branch: "master"
+          destination_branch: "dev"
           github_token: ${{ secrets.PAT }}
           
       - name: Merge main from master
@@ -35,6 +35,6 @@ jobs:
         if: env.PAT
         with:
           type: now
-          from_branch: master
+          from_branch: dev
           target_branch: main
           github_token: ${{ secrets.PAT }}
