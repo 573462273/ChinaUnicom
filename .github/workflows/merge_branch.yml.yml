@@ -29,12 +29,3 @@ jobs:
           source_branch: "azmodan"
           destination_branch: "dev"
           github_token: ${{ secrets.PAT }}
-          
-      - name: Merge main from master
-        uses: devmasx/merge-branch@v1.3.1
-        if: env.PAT
-        with:
-          type: now
-          from_branch: dev
-          target_branch: main
-          github_token: ${{ secrets.PAT }}
